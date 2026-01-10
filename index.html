@@ -114,37 +114,95 @@
 <!-- ================================================= -->
 <!-- [ORIENTATION DETECTION] -->
 <!-- ================================================= -->
-<!-- <!-- Orientation Detection Logic (portrait / landscape) -->
+<!-- =============================== -->
+<!-- ORIENTATION DETECTION & BODY RENDERER -->
+<!-- =============================== -->
+
 <script>
-  window.AppOrientation = {
-    type: null,       // "portrait" | "landscape"
-    width: null,
-    height: null
+  // Global App State
+  window.AppLayout = {
+    orientation: null,      // "portrait" | "landscape"
+    currentLayout: null,    // "mobile layout" | "desktop layout"
+    bodyContainer: null     // reference to app-body div
   };
 
+  // ----------------------
+  // Orientation Detection
+  // ----------------------
   function detectOrientation() {
     const width = window.innerWidth;
     const height = window.innerHeight;
 
-    AppOrientation.width = width;
-    AppOrientation.height = height;
-
     if (height >= width) {
-      AppOrientation.type = "portrait";
+      AppLayout.orientation = "portrait";
+      AppLayout.currentLayout = "mobile layout";
     } else {
-      AppOrientation.type = "landscape";
+      AppLayout.orientation = "landscape";
+      AppLayout.currentLayout = "desktop layout";
     }
 
-    // Notify system that orientation is ready
+    // Notify system
     document.dispatchEvent(
-      new CustomEvent("orientationDetected", { detail: AppOrientation })
+      new CustomEvent("orientationChanged", { detail: AppLayout })
     );
   }
 
-  // Initial detection
-  detectOrientation();
+  // ----------------------
+  // Body Renderer
+  // ----------------------
+  const BodyRenderer = {
+    init: function(bodyId) {
+      AppLayout.bodyContainer = document.getElementById(bodyId);
+    },
 
+    renderScreen: function(screenFile) {
+      if (!AppLayout.bodyContainer) {
+        console.error("Body container not initialized!");
+        return;
+      }
+
+      // Fetch the screen HTML (example: via fetch API)
+      fetch(screenFile)
+        .then(res => res.text())
+        .then(html => {
+          // Parse the HTML to pick the correct layout
+          const tempDiv = document.createElement("div");
+          tempDiv.innerHTML = html;
+
+          // Look for layout matching current orientation
+          const layout = tempDiv.querySelector(`.${AppLayout.currentLayout}`);
+          if (!layout) {
+            console.warn(
+              `Layout "${AppLayout.currentLayout}" not found in ${screenFile}`
+            );
+            AppLayout.bodyContainer.innerHTML = `<p>Coming Soon</p>`;
+            return;
+          }
+
+          // Render the selected layout
+          AppLayout.bodyContainer.innerHTML = layout.innerHTML;
+        })
+        .catch(err => {
+          console.error("Failed to load screen:", err);
+          AppLayout.bodyContainer.innerHTML = `<p>Error loading screen</p>`;
+        });
+    }
+  };
+
+  // ----------------------
+  // Initialize
+  // ----------------------
+  document.addEventListener("DOMContentLoaded", () => {
+    detectOrientation();
+    BodyRenderer.init("app-body");  // make sure your body has id="app-body"
+
+    // Initial screen call: LauncherUI.js
+    BodyRenderer.renderScreen("LauncherUI.html");
+  });
+
+  // ----------------------
   // Re-detect on resize / rotation
+  // ----------------------
   window.addEventListener("resize", detectOrientation);
 </script>
 
