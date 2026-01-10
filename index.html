@@ -100,7 +100,7 @@
     <!-- INITIAL SCREEN CALL -->
     <!-- ================================================= -->
     <script>
-        // Initial instinct: Launcher Screen
+        // Initial instinct: launcherUI.js
         document.addEventListener("DOMContentLoaded", () => {
             if (window.Transition) {
                 Transition.start("launcher");
@@ -196,8 +196,8 @@
     detectOrientation();
     BodyRenderer.init("app-body");  // make sure your body has id="app-body"
 
-    // Initial screen call: LauncherUI.js
-    BodyRenderer.renderScreen("LauncherUI.html");
+    // Initial screen call: launcherUI.js
+    BodyRenderer.renderScreen("launcherUI.js");
   });
 
   // ----------------------
