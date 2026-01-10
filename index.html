@@ -1,72 +1,170 @@
 <!-- first deployment -->
-<!DOCTYPE html>
+<!-- ================================================= -->
+<!-- INDEX.HTML : MASTER APPLICATION ENTRY POINT -->
+<!-- ================================================= -->
+
+<!-- [BASE HTML STRUCTURE] -->
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>FocasLyn MIOS</title>
+    <!-- ================================================= -->
+    <!-- BASIC META -->
+    <!-- ================================================= -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FocasLyn MIOS</title>
 
-  <!-- App Icon -->
-  <link rel="icon" href="icon.png" type="image/png">
+    <!-- ================================================= -->
+    <!-- RESET / BASE STYLES -->
+    <!-- ================================================= -->
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        }
 
-  <!-- Mobile behavior -->
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        html, body {
+            width: 100%;
+            height: 100%;
+            background: #ffffff;
+            overflow: hidden;
+        }
 
-  <style>
-    body {
-      margin: 0;
-      background: #0e0e0e;
-      color: white;
-      font-family: Arial, sans-serif;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-    }
+        #app-root {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
 
-    .app-icon {
-      width: 120px;
-      height: 120px;
-      border-radius: 24px;
-      background: #1e1e1e;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      box-shadow: 0 0 20px rgba(0,0,0,0.6);
-      transition: transform 0.2s ease;
-    }
+        /* Layout containers */
+        #app-header,
+        #app-footer {
+            flex-shrink: 0;
+        }
 
-    .app-icon:hover {
-      transform: scale(1.05);
-    }
-  </style>
+        #app-body {
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+        }
+    </style>
 </head>
+
 <body>
 
-  <!-- APP ICON -->
-  <div class="app-icon" onclick="launchApp()">
-    <strong>MIOS</strong>
-  </div>
+    <!-- ================================================= -->
+    <!-- APPLICATION ROOT -->
+    <!-- ================================================= -->
+    <div id="app-root">
 
-  <script>
-    function launchApp() {
-      // Try loading screen-layout only if it exists
-      const script = document.createElement('script');
-      script.src = 'screen-layout.js';
+        <!-- ================= HEADER ================= -->
+        <header id="app-header">
+            <!-- Header.js will control this -->
+        </header>
 
-      script.onload = () => {
-        if (typeof ScreenLayout !== 'undefined') {
-          ScreenLayout.init();
-        }
-      };
+        <!-- ================= BODY ================= -->
+        <main id="app-body">
+            <!-- BodyRenderer.js renders screens here -->
+        </main>
 
-      script.onerror = () => {
-        console.log('screen-layout.js not found yet — flow paused');
-      };
+        <!-- ================= FOOTER ================= -->
+        <footer id="app-footer">
+            <!-- Footer.js will control this -->
+        </footer>
 
-      document.body.appendChild(script);
-    }
-  </script>
+    </div>
+
+    <!-- ================================================= -->
+    <!-- CORE SCRIPTS (ORDER MATTERS) -->
+    <!-- ================================================= -->
+
+    <!-- Orientation detection -->
+    <script src="js/orientation.js"></script>
+
+    <!-- Body renderer -->
+    <script src="js/bodyRenderer.js"></script>
+
+    <!-- Transition & flow controller -->
+    <script src="js/transition.js"></script>
+
+    <!-- Header controller -->
+    <script src="js/header.js"></script>
+
+    <!-- Footer controller -->
+    <script src="js/footer.js"></script>
+
+    <!-- ================================================= -->
+    <!-- INITIAL SCREEN CALL -->
+    <!-- ================================================= -->
+    <script>
+        // Initial instinct: Launcher Screen
+        document.addEventListener("DOMContentLoaded", () => {
+            if (window.Transition) {
+                Transition.start("launcher");
+            }
+        });
+    </script>
 
 </body>
 </html>
+
+<!-- ================================================= -->
+<!-- [ORIENTATION DETECTION] -->
+<!-- ================================================= -->
+<!-- Orientation detection logic (portrait / landscape) -->
+
+
+<!-- ================================================= -->
+<!-- [LAYOUT DESIGN SELECTIONS] -->
+<!-- ================================================= -->
+
+<!-- -------- MOBILE LAYOUT -------- -->
+<!-- [MOBILE] -->
+<!-- Header.js -->
+<!--   - App Icon -->
+<!--   - Screen Name -->
+<!--   - Hamburger Menu -->
+
+<!-- BodyRenderer.js -->
+<!--   - Initial Screen Call -->
+
+<!-- Footer.js -->
+<!--   - Copyright -->
+<!--   - Powered By -->
+<!--   - GoBack.js -->
+
+
+<!-- -------- DESKTOP LAYOUT -------- -->
+<!-- [DESKTOP] -->
+<!-- Header.js -->
+<!-- BodyRenderer.js -->
+<!-- Footer.js -->
+
+
+<!-- -------- TABLET LAYOUT -------- -->
+<!-- [TABLET] -->
+<!-- Header.js -->
+<!-- BodyRenderer.js -->
+<!-- Footer.js -->
+
+
+<!-- -------- TV LAYOUT -------- -->
+<!-- [TV] -->
+<!-- Header.js -->
+<!-- BodyRenderer.js -->
+<!-- Footer.js -->
+
+
+<!-- ================================================= -->
+<!-- [RESPONSIVE ASSETS] -->
+<!-- ================================================= -->
+<!-- Icons, images, fonts, breakpoints -->
+
+
+<!-- ================================================= -->
+<!-- [GLOBAL EVENT LISTENERS] -->
+<!-- ================================================= -->
+<!-- App-wide listeners if needed -->
