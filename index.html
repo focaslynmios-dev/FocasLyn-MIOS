@@ -1,6 +1,72 @@
 <!-- first deployment -->
-<body style="background: white; color: black; font-size: 24px;">
-  <h1>FocasLyn MIOS</h1>
-  <p>HTML rendering confirmed</p>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>FocasLyn MIOS</title>
+
+  <!-- App Icon -->
+  <link rel="icon" href="icon.png" type="image/png">
+
+  <!-- Mobile behavior -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    body {
+      margin: 0;
+      background: #0e0e0e;
+      color: white;
+      font-family: Arial, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+
+    .app-icon {
+      width: 120px;
+      height: 120px;
+      border-radius: 24px;
+      background: #1e1e1e;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 0 20px rgba(0,0,0,0.6);
+      transition: transform 0.2s ease;
+    }
+
+    .app-icon:hover {
+      transform: scale(1.05);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- APP ICON -->
+  <div class="app-icon" onclick="launchApp()">
+    <strong>MIOS</strong>
+  </div>
+
+  <script>
+    function launchApp() {
+      // Try loading screen-layout only if it exists
+      const script = document.createElement('script');
+      script.src = 'screen-layout.js';
+
+      script.onload = () => {
+        if (typeof ScreenLayout !== 'undefined') {
+          ScreenLayout.init();
+        }
+      };
+
+      script.onerror = () => {
+        console.log('screen-layout.js not found yet — flow paused');
+      };
+
+      document.body.appendChild(script);
+    }
+  </script>
+
 </body>
-<script defer src="screenlayout.js"></script>
+</html>
