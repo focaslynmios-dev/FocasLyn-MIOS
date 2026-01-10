@@ -1,452 +1,266 @@
 <!-- first deployment -->
-<!-- ================================================= -->
-<!-- INDEX.HTML : MASTER APPLICATION ENTRY POINT -->
-<!-- ================================================= -->
-
-<!-- [BASE HTML STRUCTURE] -->
-<!-- <!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- ================================================= -->
-    <!-- BASIC META -->
-    <!-- ================================================= -->
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>FocasLyn MIOS</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FocasLyn MIOS</title>
 
-    <!-- ================================================= -->
-    <!-- RESET / BASE STYLES -->
-    <!-- ================================================= -->
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-        }
+  <!-- ===============================
+       RESET / BASE STYLES
+  =============================== -->
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
 
-        html, body {
-            width: 100%;
-            height: 100%;
-            background: #ffffff;
-            overflow: hidden;
-        }
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
 
-        #app-root {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-        }
+    /* App Root */
+    #app-root {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
 
-        /* Layout containers */
-        #app-header,
-        #app-footer {
-            flex-shrink: 0;
-        }
+    /* Header/Footer common */
+    #app-header,
+    #app-footer {
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 16px;
+    }
 
-        #app-body {
-            flex: 1;
-            position: relative;
-            overflow: hidden;
-        }
-    </style>
+    #app-body {
+      flex: 1;
+      overflow-y: auto;
+      position: relative;
+    }
+
+    #app-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      color: #fff;
+      cursor: pointer;
+    }
+
+    #screen-name {
+      flex: 1;
+      text-align: center;
+      font-weight: bold;
+    }
+
+    #hamburger-btn,
+    #go-back-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: #fff;
+    }
+
+    /* ===============================
+       MOBILE LAYOUT
+    =============================== */
+    .mobile-layout #app-header,
+    .mobile-layout #app-footer {
+      background: #000;
+      color: #fff;
+      height: 60px;
+    }
+
+    .mobile-layout #app-icon {
+      width: 50px;
+      height: 50px;
+      background: #222;
+      font-size: 18px;
+    }
+
+    .mobile-layout #screen-name {
+      font-size: 18px;
+    }
+
+    .mobile-layout #hamburger-btn,
+    .mobile-layout #go-back-btn {
+      font-size: 18px;
+    }
+
+    .mobile-layout #app-body {
+      background: #f5f5f5;
+      padding: 16px;
+    }
+
+    /* ===============================
+       DESKTOP LAYOUT
+    =============================== */
+    .desktop-layout #app-header,
+    .desktop-layout #app-footer {
+      background: #222;
+      color: #fff;
+      height: 80px;
+      padding: 16px 24px;
+    }
+
+    .desktop-layout #app-icon {
+      width: 120px;
+      height: 60px;
+      background: #444;
+      font-size: 20px;
+    }
+
+    .desktop-layout #screen-name {
+      font-size: 24px;
+    }
+
+    .desktop-layout #hamburger-btn,
+    .desktop-layout #go-back-btn {
+      font-size: 24px;
+    }
+
+    .desktop-layout #app-body {
+      background: #e5e5e5;
+      padding: 24px;
+    }
+  </style>
 </head>
-
 <body>
 
-    <!-- ================================================= -->
-    <!-- APPLICATION ROOT -->
-    <!-- ================================================= -->
-    <div id="app-root">
+  <!-- ===============================
+       APPLICATION ROOT
+  =============================== -->
+  <div id="app-root" class="mobile-layout">
 
-        <!-- ================= HEADER ================= -->
-        <header id="app-header">
-            <!-- Header.js will control this -->
-        </header>
+    <!-- HEADER -->
+    <header id="app-header">
+      <div id="app-icon">FL</div>
+      <div id="screen-name">Launcher</div>
+      <button id="hamburger-btn">☰</button>
+    </header>
 
-        <!-- ================= BODY ================= -->
-        <main id="app-body">
-            <!-- BodyRenderer.js renders screens here -->
-        </main>
+    <!-- BODY -->
+    <main id="app-body">
+      <!-- BodyRenderer will inject screens here -->
+    </main>
 
-        <!-- ================= FOOTER ================= -->
-        <footer id="app-footer">
-            <!-- Footer.js will control this -->
-        </footer>
+    <!-- FOOTER -->
+    <footer id="app-footer">
+      <span>© 2026</span>
+      <span>Powered by FocasLyn Digital Tech</span>
+      <button id="go-back-btn" hidden>← Back</button>
+    </footer>
+  </div>
 
-    </div>
+  <!-- ===============================
+       ORIENTATION & BODY RENDERER
+  =============================== -->
+  <script>
+    window.AppLayout = {
+      orientation: null,      // portrait | landscape
+      currentLayout: null,    // mobile-layout | desktop-layout
+      bodyContainer: null
+    };
 
-    <!-- ================================================= -->
-    <!-- CORE SCRIPTS (ORDER MATTERS) -->
-    <!-- ================================================= -->
+    // Detect orientation
+    function detectOrientation() {
+      const width = window.innerWidth;
+      const height = window.innerHeight;
 
-    <!-- Orientation detection -->
-    <script src="js/orientation.js"></script>
+      if (height >= width) {
+        AppLayout.orientation = "portrait";
+        AppLayout.currentLayout = "mobile-layout";
+      } else {
+        AppLayout.orientation = "landscape";
+        AppLayout.currentLayout = "desktop-layout";
+      }
 
-    <!-- Body renderer -->
-    <script src="js/bodyRenderer.js"></script>
+      // Apply layout class to root
+      const root = document.getElementById("app-root");
+      root.className = AppLayout.currentLayout;
 
-    <!-- Transition & flow controller -->
-    <script src="js/transition.js"></script>
+      // Notify system
+      document.dispatchEvent(
+        new CustomEvent("orientationChanged", { detail: AppLayout })
+      );
+    }
 
-    <!-- Header controller -->
-    <script src="js/header.js"></script>
+    // Body Renderer
+    const BodyRenderer = {
+      init: function(bodyId) {
+        AppLayout.bodyContainer = document.getElementById(bodyId);
+      },
+      renderScreen: function(screenObj) {
+        if (!AppLayout.bodyContainer) return;
 
-    <!-- Footer controller -->
-    <script src="js/footer.js"></script>
+        const html = screenObj[AppLayout.currentLayout];
+        if (!html) {
+          AppLayout.bodyContainer.innerHTML = `<p>Coming Soon</p>`;
+          return;
+        }
+        AppLayout.bodyContainer.innerHTML = html;
+      }
+    };
 
-    <!-- ================================================= -->
-    <!-- INITIAL SCREEN CALL -->
-    <!-- ================================================= -->
-    <script>
-        // Initial instinct: launcherUI.js
-        document.addEventListener("DOMContentLoaded", () => {
-            if (window.Transition) {
-                Transition.start("launcher");
-            }
-        });
-    </script>
+    // Go Back logic
+    const historyStack = [];
+    function renderScreen(html) {
+      historyStack.push(AppLayout.bodyContainer.innerHTML);
+      AppLayout.bodyContainer.innerHTML = html;
+      document.getElementById("go-back-btn").hidden = false;
+    }
+    function goBack() {
+      if (historyStack.length > 0) {
+        AppLayout.bodyContainer.innerHTML = historyStack.pop();
+      }
+      if (historyStack.length === 0) {
+        document.getElementById("go-back-btn").hidden = true;
+      }
+    }
+    document.getElementById("go-back-btn").onclick = goBack;
+
+    // Initialize
+    document.addEventListener("DOMContentLoaded", () => {
+      detectOrientation();
+      BodyRenderer.init("app-body");
+      BodyRenderer.renderScreen(LauncherUI); // launcherUI.js must export an object with mobile-layout and desktop-layout
+    });
+
+    window.addEventListener("resize", detectOrientation);
+  </script>
+
+  <!-- ===============================
+       LAUNCHER UI EXAMPLE
+  =============================== -->
+  <script>
+    const LauncherUI = {
+      "mobile-layout": `
+        <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%; text-align:center;">
+          <div style="width:100px; height:100px; border-radius:50%; background:black; color:white; display:flex; align-items:center; justify-content:center; font-weight:bold; font-size:18px;">FL</div>
+          <h1 style="color:#007bff; margin-top:12px;">FocasLyn</h1>
+          <h2 style="color:gold; margin-top:4px;">MIOS</h2>
+          <p style="margin-top:16px;">Lifestyle: budgeting, health, goals.<br>Business: Finance, HR, Operations, Leadership, Marketing.</p>
+        </div>
+      `,
+      "desktop-layout": `
+        <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%; text-align:center;">
+          <div style="width:150px; height:150px; border-radius:50%; background:black; color:white; display:flex; align-items:center; justify-content:center; font-weight:bold; font-size:24px;">FL</div>
+          <h1 style="color:#007bff; margin-top:16px; font-size:48px;">FocasLyn</h1>
+          <h2 style="color:gold; margin-top:8px; font-size:36px;">MIOS</h2>
+          <p style="margin-top:24px; font-size:18px;">Lifestyle: budgeting, health, goals.<br>Business: Finance, HR, Operations, Leadership, Marketing.</p>
+        </div>
+      `
+    };
+  </script>
 
 </body>
 </html>
-
-<!-- ================================================= -->
-<!-- [ORIENTATION DETECTION] -->
-<!-- ================================================= -->
-<!-- =============================== -->
-<!-- ORIENTATION DETECTION & BODY RENDERER -->
-<!-- =============================== -->
-
-<script>
-  // Global App State
-  window.AppLayout = {
-    orientation: null,      // "portrait" | "landscape"
-    currentLayout: null,    // "mobile layout" | "desktop layout"
-    bodyContainer: null     // reference to app-body div
-  };
-
-  // ----------------------
-  // Orientation Detection
-  // ----------------------
-  function detectOrientation() {
-    const width = window.innerWidth;
-    const height = window.innerHeight;
-
-    if (height >= width) {
-      AppLayout.orientation = "portrait";
-      AppLayout.currentLayout = "mobile layout";
-    } else {
-      AppLayout.orientation = "landscape";
-      AppLayout.currentLayout = "desktop layout";
-    }
-
-    // Notify system
-    document.dispatchEvent(
-      new CustomEvent("orientationChanged", { detail: AppLayout })
-    );
-  }
-
-  // ----------------------
-  // Body Renderer
-  // ----------------------
-  const BodyRenderer = {
-    init: function(bodyId) {
-      AppLayout.bodyContainer = document.getElementById(bodyId);
-    },
-
-    renderScreen: function(screenFile) {
-      if (!AppLayout.bodyContainer) {
-        console.error("Body container not initialized!");
-        return;
-      }
-
-      // Fetch the screen HTML (example: via fetch API)
-      fetch(screenFile)
-        .then(res => res.text())
-        .then(html => {
-          // Parse the HTML to pick the correct layout
-          const tempDiv = document.createElement("div");
-          tempDiv.innerHTML = html;
-
-          // Look for layout matching current orientation
-          const layout = tempDiv.querySelector(`.${AppLayout.currentLayout}`);
-          if (!layout) {
-            console.warn(
-              `Layout "${AppLayout.currentLayout}" not found in ${screenFile}`
-            );
-            AppLayout.bodyContainer.innerHTML = `<p>Coming Soon</p>`;
-            return;
-          }
-
-          // Render the selected layout
-          AppLayout.bodyContainer.innerHTML = layout.innerHTML;
-        })
-        .catch(err => {
-          console.error("Failed to load screen:", err);
-          AppLayout.bodyContainer.innerHTML = `<p>Error loading screen</p>`;
-        });
-    }
-  };
-
-  // ----------------------
-  // Initialize
-  // ----------------------
-  document.addEventListener("DOMContentLoaded", () => {
-    detectOrientation();
-    BodyRenderer.init("app-body");  // make sure your body has id="app-body"
-
-    // Initial screen call: launcherUI.js
-    BodyRenderer.renderScreen("launcherUI.js");
-  });
-
-  // ----------------------
-  // Re-detect on resize / rotation
-  // ----------------------
-  window.addEventListener("resize", detectOrientation);
-</script>
-
-<!-- ================================================= -->
-<!-- [LAYOUT DESIGN SELECTIONS] -->
-<!-- ================================================= -->
-
-<!-- -------- MOBILE LAYOUT -------- -->
-<!-<!-- =============================== -->  
-<!-- MOBILE LAYOUT ----------------- -->  
-<!-- =============================== -->  
-
-<div id="app-root" class="mobile-layout">
-
-  <!-- HEADER -->  
-  <header id="app-header">  
-    <div id="app-icon">FL</div>  
-    <div id="screen-name">Launcher</div>  
-    <button id="hamburger-btn">☰</button>  
-  </header>  
-
-  <!-- BODY -->  
-  <main id="app-body">  
-    <!-- BodyRenderer.js will inject screens here -->  
-  </main>  
-
-  <!-- FOOTER -->  
-  <footer id="app-footer">  
-    <span>© 2026</span>  
-    <span>Powered by FocasLyn Digital Tech</span>  
-    <button id="go-back-btn" hidden>← Back</button>  
-  </footer>  
-
-</div>  
-
-<!-- =============================== -->  
-<!-- END MOBILE LAYOUT ------------- -->  
-<!-- =============================== -->  
-
-<style>  
-  .mobile-layout {  
-    display: flex;  
-    flex-direction: column;  
-    height: 100vh;  
-    width: 100%;  
-    font-family: sans-serif;  
-  }  
-
-  #app-header,  
-  #app-footer {  
-    display: flex;  
-    align-items: center;  
-    justify-content: space-between;  
-    padding: 10px;  
-    background: #000;  
-    color: #fff;  
-  }  
-
-  #app-body {  
-    flex: 1;  
-    overflow-y: auto;  
-    padding: 16px;  
-    background: #f5f5f5;  
-  }  
-
-  #hamburger-btn,  
-  #go-back-btn {  
-    background: none;  
-    border: none;  
-    color: #fff;  
-    font-size: 18px;  
-    cursor: pointer;  
-  }  
-</style>  
-
-<script>
-  /* ===============================
-     SCREEN NAME CONTROL
-  =============================== */
-  function setScreenName(name) {
-    document.getElementById("screen-name").textContent = name;
-  }
-
-  /* ===============================
-     BODY RENDERER
-  =============================== */
-  const historyStack = [];
-
-  function renderScreen(html) {
-    document.getElementById("app-body").innerHTML = html;
-  }
-
-  /* ===============================
-     GO BACK LOGIC
-  =============================== */
-  function goBack() {
-    if (historyStack.length > 0) {
-      const prev = historyStack.pop();
-      renderScreen(prev);
-    }
-    if (historyStack.length === 0) {
-      document.getElementById("go-back-btn").hidden = true;
-    }
-  }
-
-  document.getElementById("go-back-btn").onclick = goBack;
-
-
-<!-- -------- DESKTOP LAYOUT -------- -->
-<!-- =============================== -->  
-<!-- DESKTOP LAYOUT ---------------- -->  
-<!-- =============================== -->  
-
-<div id="app-root" class="desktop-layout">
-
-  <!-- HEADER -->
-  <header id="app-header">
-    <!-- Header.js for DESKTOP -->
-    <!--   - App Icon: #app-icon, top-left, widh: 120px, height: 60px, background: #222, color: #fff -->
-    <div id="app-icon">FL</div>
-    <!--   - Screen Name: #screen-name, center, font-size: 24px, color: #fff -->
-    <div id="screen-name">Launcher</div>
-    <!--   - Hamburger Menu: #hamburger-btn, top-right, width: 40px, height: 40px, font-size: 24px, cursor: pointer -->
-    <button id="hamburger-btn">☰</button>
-  </header>
-
-  <!-- BODY -->
-  <main id="app-body">
-    <!-- BodyRenderer.js for DESKTOP -->
-    <!--   - Initial Screen Call -->
-    <!--     Placeholder for launcher or future screens -->
-  </main>
-
-  <!-- FOOTER -->
-  <footer id="app-footer">
-    <!-- Footer.js for DESKTOP -->
-    <!--   - Copyright: left side, font-size: 14px, color: #fff -->
-    <span>© 2026</span>
-    <!--   - Powered By: center, font-size: 14px, color: #fff -->
-    <span>Powered by FocasLyn Digital Tech</span>
-    <!--   - GoBack.js: right side, button, width: 100px, height: 40px, font-size: 16px, hidden by default -->
-    <button id="go-back-btn" hidden>← Back</button>
-  </footer>
-
-</div>
-
-<!-- =============================== -->
-<!-- END DESKTOP LAYOUT ------------- -->
-<!-- =============================== -->
-
-<style>
-  .desktop-layout {
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-    width: 100%;
-    font-family: sans-serif;
-  }
-
-  /* HEADER */
-  #app-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 16px 24px;
-    background: #222;
-    color: #fff;
-    height: 80px; /* desktop-specific header height */
-  }
-  #app-icon {
-    width: 120px;
-    height: 60px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: #444;
-    font-size: 20px;
-    color: #fff;
-  }
-  #screen-name {
-    font-size: 24px;
-    text-align: center;
-    flex: 1;
-  }
-  #hamburger-btn {
-    width: 40px;
-    height: 40px;
-    font-size: 24px;
-    background: none;
-    border: none;
-    color: #fff;
-    cursor: pointer;
-  }
-
-  /* BODY */
-  #app-body {
-    flex: 1;
-    overflow-y: auto;
-    padding: 24px;
-    background: #e5e5e5;
-  }
-
-  /* FOOTER */
-  #app-footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 16px 24px;
-    background: #222;
-    color: #fff;
-    height: 60px; /* desktop-specific footer height */
-  }
-  #go-back-btn {
-    width: 100px;
-    height: 40px;
-    font-size: 16px;
-    background: #555;
-    border: none;
-    color: #fff;
-    cursor: pointer;
-  }
-</style>
-
-<!-- -------- TABLET LAYOUT -------- -->
-<!-- [TABLET] -->
-<!-- Header.js -->
-<!-- BodyRenderer.js -->
-<!-- Footer.js -->
-
-
-<!-- -------- TV LAYOUT -------- -->
-<!-- [TV] -->
-<!-- Header.js -->
-<!-- BodyRenderer.js -->
-<!-- Footer.js -->
-
-
-<!-- ================================================= -->
-<!-- [RESPONSIVE ASSETS] -->
-<!-- ================================================= -->
-<!-- Icons, images, fonts, breakpoints -->
-
-
-<!-- ================================================= -->
-<!-- [GLOBAL EVENT LISTENERS] -->
-<!-- ================================================= -->
-<!-- App-wide listeners if needed -->
