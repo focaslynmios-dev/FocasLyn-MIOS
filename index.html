@@ -6,54 +6,90 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>FocasLyn MIOS</title>
 
+  <!-- ===============================
+       RESET / BASE STYLES
+  =============================== -->
   <style>
-    /* BASIC RESET */
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    html, body { width: 100%; height: 100%; overflow: hidden; }
 
-    body {
-      font-family: Arial, sans-serif;
-      height: 100vh;
+    /* App Root */
+    #approot {
+      width: 100%;
+      height: 100%;
       display: flex;
       flex-direction: column;
     }
 
-    header, footer {
-      padding: 10px;
-      text-align: center;
-      background: #111;
-      color: #fff;
+    /* Header/Footer common */
+    #app-header,
+    #app-footer {
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 16px;
     }
 
-    main {
+    #app-body {
       flex: 1;
-      overflow: auto;
+      overflow-y: auto;
+      position: relative;
     }
 
-    .hidden { display: none; }
+    #app-icon { display: flex; align-items: center; justify-content: center; font-weight: bold; color: #fff; cursor: pointer; }
+    #screen-name { flex: 1; text-align: center; font-weight: bold; }
+    #hamburger-btn, #go-back-btn { background: none; border: none; cursor: pointer; color: #fff; }
+
+    /* MOBILE LAYOUT */
+    .mobile-layout #app-header,
+    .mobile-layout #app-footer { background: #000; color: #fff; height: 60px; }
+    .mobile-layout #app-icon { width: 50px; height: 50px; background: #222; font-size: 18px; }
+    .mobile-layout #screen-name { font-size: 18px; }
+    .mobile-layout #hamburger-btn,
+    .mobile-layout #go-back-btn { font-size: 18px; }
+    .mobile-layout #app-body { background: #f5f5f5; padding: 16px; }
+
+    /* DESKTOP LAYOUT */
+    .desktop-layout #app-header,
+    .desktop-layout #app-footer { background: #222; color: #fff; height: 80px; padding: 16px 24px; }
+    .desktop-layout #app-icon { width: 120px; height: 60px; background: #444; font-size: 20px; }
+    .desktop-layout #screen-name { font-size: 24px; }
+    .desktop-layout #hamburger-btn,
+    .desktop-layout #go-back-btn { font-size: 24px; }
+    .desktop-layout #app-body { background: #e5e5e5; padding: 24px; }
   </style>
 </head>
-
 <body>
 
-  <!-- HEADER (STATIC) -->
-  <header>
-    <strong>FL</strong>
-  </header>
+  <!-- ===============================
+       APPLICATION ROOT
+  =============================== -->
+  <div id="approot" class="mobile-layout">
+    <!-- HEADER -->
+    <header id="app-header">
+      <div id="app-icon">FL</div>
+      <div id="screen-name">Launcher</div>
+      <button id="hamburger-btn">☰</button>
+    </header>
 
-  <!-- APP ROOT (DYNAMIC CONTENT GOES HERE) -->
-  <main id="app-root">
-    <!-- launcher.ui.html will be injected here -->
-  </main>
+    <!-- BODY -->
+    <main id="app-body">
+      <!-- Screens will be injected here -->
+    </main>
 
-  <!-- FOOTER (STATIC) -->
-  <footer>
-    © 2026 · Powered by FocasLyn Digital Tech
-  </footer>
+    <!-- FOOTER -->
+    <footer id="app-footer">
+      <span>© 2026</span>
+      <span>Powered by FocasLyn Digital Tech</span>
+      <button id="go-back-btn" hidden>← Back</button>
+    </footer>
+  </div>
 
-  <!-- CORE APP LOGIC -->
+  <!-- ===============================
+       APP CORE LOGIC
+  =============================== -->
   <script src="index.js"></script>
-
+  <script src="go-back.js"></script>
 </body>
 </html>
-
- 
