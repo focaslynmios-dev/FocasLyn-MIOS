@@ -1,0 +1,44 @@
+<!-- subscription.html -->
+<section id="subscription-screen">
+  <h2>Trial & Subscription</h2>
+
+  <div class="subscription-buttons">
+    <div class="subscription-trial">
+      <button id="request-access">Request Access Code</button>
+      <input id="trial-input" placeholder="Focus7" list="trial-suggestions" />
+      <datalist id="trial-suggestions">
+        <option value="Focus7">
+      </datalist>
+    </div>
+
+    <div class="subscription-activate">
+      <button id="activate-sub">Activate Subscription</button>
+      <input id="activate-input" placeholder="Enter code" />
+    </div>
+  </div>
+
+  <button id="validate-subscription">Validate</button>
+</section>
+
+<script>
+  const SubscriptionScreen = {
+    "mobile-layout": document.getElementById("subscription-screen")?.outerHTML,
+    "desktop-layout": document.getElementById("subscription-screen")?.outerHTML,
+    onMount() {
+      // Request access sends WhatsApp message
+      document.getElementById("request-access")?.addEventListener("click", () => {
+        const selectedModes = window.Security?.getSelectedModes?.() || [];
+        const message = `Selected Modes: ${selectedModes.join(", ")}`;
+        window.open(`https://www.wa.me/+26774226746?text=${encodeURIComponent(message)}`, "_blank");
+      });
+
+      // Validate button reports to security.js
+      document.getElementById("validate-subscription")?.addEventListener("click", () => {
+        const trialCode = document.getElementById("trial-input")?.value;
+        const activateCode = document.getElementById("activate-input")?.value;
+
+        window.Security?.validateSubscription?.({ trialCode, activateCode });
+      });
+    }
+  };
+</script>
