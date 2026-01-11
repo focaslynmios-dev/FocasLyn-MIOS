@@ -1,0 +1,48 @@
+<!-- mode-selection.html -->
+<section id="mode-selection-screen">
+  <h2>Access Mode</h2>
+
+  <!-- Lifestyle Mode -->
+  <div class="mode-group">
+    <label><input type="checkbox" class="lifestyle" value="Finance" /> Finance</label>
+    <label><input type="checkbox" class="lifestyle" value="Health" /> Health</label>
+    <label><input type="checkbox" class="lifestyle" value="Purpose" /> Purpose</label>
+  </div>
+
+  <!-- Business Mode -->
+  <div class="mode-group">
+    <label><input type="checkbox" id="businessMode" /> Business Mode</label>
+    <div class="sub-checkboxes">
+      <label class="sub-checkbox"><input type="checkbox" class="businessSub" value="Accounting" /> Accounting</label>
+      <label class="sub-checkbox"><input type="checkbox" class="businessSub" value="Marketing" /> Marketing</label>
+      <label class="sub-checkbox"><input type="checkbox" class="businessSub" value="HR" /> HR</label>
+      <label class="sub-checkbox"><input type="checkbox" class="businessSub" value="Operations" /> Operations</label>
+      <label class="sub-checkbox"><input type="checkbox" class="businessSub" value="Management" /> Management</label>
+    </div>
+  </div>
+
+  <button id="mode-continue-btn">Continue</button>
+</section>
+
+<script>
+  const ModeSelectionScreen = {
+    "mobile-layout": document.getElementById("mode-selection-screen")?.outerHTML,
+    "desktop-layout": document.getElementById("mode-selection-screen")?.outerHTML,
+    onMount() {
+      const btn = document.getElementById("mode-continue-btn");
+      btn?.addEventListener("click", () => {
+        // Collect selected checkboxes
+        const selectedModes = [
+          ...document.querySelectorAll(".lifestyle:checked"),
+          ...document.querySelectorAll(".businessSub:checked")
+        ].map(cb => cb.value);
+
+        // Send to security.js
+        window.Security?.setSelectedModes?.(selectedModes);
+
+        // Render Subscription Screen
+        BodyRenderer.renderScreen(SubscriptionScreen);
+      });
+    }
+  };
+</script>
