@@ -483,13 +483,141 @@
   };
 </script> 
 
- GOOGLE.JS
+ <!-- ===============================
+     SCREEN NAME : GOOGLE AUTH
+     FILE        : google.js
+     FROM        : RegistrationScreen
+     NEXT        : SubscriptionScreen / Dashboard
+=============================== -->
 
- FACEBOOK.JS
+<script>
+  const GoogleScreen = {
+    "mobile-layout": `
+      <section id="google-auth-screen">
+        <h2>Google Authentication</h2>
+        <p>Signing in with Google...</p>
+        <button id="google-success">Simulate Success</button>
+      </section>
+    `,
+    "desktop-layout": `
+      <section id="google-auth-screen">
+        <h2>Google Authentication</h2>
+        <p>Signing in with Google...</p>
+        <button id="google-success">Simulate Success</button>
+      </section>
+    `,
+    onMount() {
+      console.log("GOOGLE AUTH SCREEN");
 
- EMAIL.JS
+      document.getElementById("google-success")?.onclick = () => {
+        BodyRenderer.renderScreen(ModeSelectionScreen);
+      };
+    }
+  };
+</script>
 
- RECOVERY.JS
+ <!-- ===============================
+     SCREEN NAME : FACEBOOK AUTH
+     FILE        : facebook.js
+     FROM        : RegistrationScreen
+     NEXT        : SubscriptionScreen / Dashboard
+=============================== -->
+
+<script>
+  const FacebookScreen = {
+    "mobile-layout": `
+      <section id="facebook-auth-screen">
+        <h2>Facebook Authentication</h2>
+        <p>Signing in with Facebook...</p>
+        <button id="facebook-success">Simulate Success</button>
+      </section>
+    `,
+    "desktop-layout": `
+      <section id="facebook-auth-screen">
+        <h2>Facebook Authentication</h2>
+        <p>Signing in with Facebook...</p>
+        <button id="facebook-success">Simulate Success</button>
+      </section>
+    `,
+    onMount() {
+      console.log("FACEBOOK AUTH SCREEN");
+
+      document.getElementById("facebook-success")?.onclick = () => {
+        BodyRenderer.renderScreen(ModeSelectionScreen);
+      };
+    }
+  };
+</script>
+
+ <!-- ===============================
+     SCREEN NAME : EMAIL REGISTRATION
+     FILE        : email.js
+     FROM        : RegistrationScreen
+     NEXT        : SubscriptionScreen
+=============================== -->
+
+<script>
+  const EmailScreen = {
+    "mobile-layout": `
+      <section id="email-auth-screen">
+        <h2>Email Registration</h2>
+        <input placeholder="Email" />
+        <input placeholder="Password" type="password" />
+        <button id="email-submit">Continue</button>
+      </section>
+    `,
+    "desktop-layout": `
+      <section id="email-auth-screen">
+        <h2>Email Registration</h2>
+        <input placeholder="Email" />
+        <input placeholder="Password" type="password" />
+        <button id="email-submit">Continue</button>
+      </section>
+    `,
+    onMount() {
+      console.log("EMAIL REGISTRATION SCREEN");
+
+      document.getElementById("email-submit")?.onclick = () => {
+        BodyRenderer.renderScreen(ModeSelectionScreen);
+      };
+    }
+  };
+</script>
+
+ Login.js
+ 
+ <!-- ===============================
+     SCREEN NAME : PASSWORD RECOVERY
+     FILE        : recovery.js
+     FROM        : RegistrationScreen
+     NEXT        : GoBackScreen
+=============================== -->
+
+<script>
+  const RecoveryScreen = {
+    "mobile-layout": `
+      <section id="recovery-screen">
+        <h2>Recover Password</h2>
+        <input placeholder="Enter your email" />
+        <button id="recovery-submit">Send Recovery Link</button>
+      </section>
+    `,
+    "desktop-layout": `
+      <section id="recovery-screen">
+        <h2>Recover Password</h2>
+        <input placeholder="Enter your email" />
+        <button id="recovery-submit">Send Recovery Link</button>
+      </section>
+    `,
+    onMount() {
+      console.log("RECOVERY SCREEN");
+
+      document.getElementById("recovery-submit")?.onclick = () => {
+        BodyRenderer.renderScreen(GoBackScreen);
+      };
+    }
+  };
+</script>
 
  MODE SELECTION JS
 
