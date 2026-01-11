@@ -1,0 +1,60 @@
+<!-- hamburger.html -->
+<section id="hamburger-menu">
+  <h3>Account Info</h3>
+  <p>Sub type: <span id="sub-type">Trial / Sub</span></p>
+  <p>Sub expiry: <span id="sub-expiry">00:00:00</span></p>
+
+  <button id="profile-btn">Profile ▶</button>
+  <button id="settings-btn">Settings</button>
+
+  <h3>Global Zones</h3>
+  <button id="discovery-btn">Discovery Feed</button>
+  <button id="events-btn">Events</button>
+  <button id="marketplace-btn">Marketplace</button>
+  <button id="about-btn">About You</button>
+  <button id="install-btn">Install</button>
+
+  <h3>Utilities</h3>
+  <button id="wallet-btn">Wallet</button>
+  <button id="conference-btn">Conference</button>
+  <button id="support-btn">Customer Support</button>
+  <button id="chat-btn">Chat</button>
+  <button id="logout-btn">Logout</button>
+</section>
+
+<script>
+  const HamburgerMenu = {
+    "mobile-layout": document.getElementById("hamburger-menu")?.outerHTML,
+    "desktop-layout": document.getElementById("hamburger-menu")?.outerHTML,
+    onMount() {
+      const setBtn = (id, file) => {
+        const btn = document.getElementById(id);
+        if (!file) {
+          btn.disabled = true;
+          btn.textContent += " (Coming Soon)";
+          return;
+        }
+        btn.addEventListener("click", () => BodyRenderer.renderScreen(file));
+      };
+
+      setBtn("profile-btn", window.ProfileScreen);
+      setBtn("settings-btn", window.SettingsScreen);
+
+      setBtn("discovery-btn", window.DiscoveryScreen);
+      setBtn("events-btn", window.EventsScreen);
+      setBtn("marketplace-btn", window.MarketplaceScreen);
+      setBtn("about-btn", window.AboutScreen);
+      setBtn("install-btn", window.InstallScreen);
+
+      setBtn("wallet-btn", window.WalletScreen);
+      setBtn("conference-btn", window.ConferenceScreen);
+      setBtn("support-btn", window.SupportScreen);
+      setBtn("chat-btn", window.ChatScreen);
+
+      const logoutBtn = document.getElementById("logout-btn");
+      logoutBtn.addEventListener("click", () => {
+        BodyRenderer.renderScreen(LauncherUI);
+      });
+    }
+  };
+</script>
