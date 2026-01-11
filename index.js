@@ -1,52 +1,73 @@
-// ===============================
-// APP CORE
-// ===============================
+// ------------------------------
+// GLOBAL APP LAYOUT OBJECT
+// ------------------------------
+window.AppLayout = {
+  orientation: null,         // portrait | landscape
+  currentLayout: null,       // mobile-layout | desktop-layout
+  approot: null,             // DOM container
+};
 
-const App = {
-  root: document.getElementById("app-root"),
+// ------------------------------
+// ORIENTATION DETECTION
+// ------------------------------
+function detectOrientation() {
+  const width = window.innerWidth;
+  const height = window.innerHeight;
 
-  detectOrientation() {
-    return window.innerWidth > window.innerHeight
-      ? "horizontal"
-      : "portrait";
+  if (height >= width) {
+    AppLayout.orientation = "portrait";
+    AppLayout.currentLayout = "mobile-layout";
+  } else {
+    AppLayout.orientation = "landscape";
+    AppLayout.currentLayout = "desktop-layout";
+  }
+
+  AppLayout.approot.className = AppLayout.currentLayout;
+  document.dispatchEvent(new CustomEvent("orientationChanged", { detail: AppLayout }));
+}
+
+// ------------------------------
+// BODY RENDERER (FORWARD NAVIGATION)
+// ------------------------------
+const Renderer = {
+  init: function(rootId) {
+    AppLayout.approot = document.getElementById(rootId);
   },
+  renderScreen: function(screenObj) {
+    const body = AppLayout.approot.querySelector("#app-body");
+    if (!body) return;
 
-  async loadFile(filePath) {
-    try {
-      const response = await fetch(filePath);
+    // Push current screen to go-back stack
+    if (window.GoBack) window.GoBack.push(body.innerHTML, AppLayout.currentScreen);
 
-      if (!response.ok) {
-        throw new Error("File not found: " + filePath);
-      }
+    // Render HTML for current layout
+    const html = screenObj[AppLayout.currentLayout] || `<p>Coming Soon</p>`;
+    body.innerHTML = html;
 
-      const html = await response.text();
-      this.render(html);
-    } catch (err) {
-      this.render(`
-        <div style="padding:20px;color:red;">
-          <h3>Error loading screen</h3>
-          <p>${err.message}</p>
-        </div>
-      `);
-    }
-  },
+    // Update screen name dynamically
+    const screenNameEl = AppLayout.approot.querySelector("#screen-name");
+    if (screenNameEl && screenObj.name) screenNameEl.textContent = screenObj.name;
 
-  render(html) {
-    this.root.innerHTML = html;
-  },
+    // Store current screen
+    AppLayout.currentScreen = screenObj;
 
-  start() {
-    const orientation = this.detectOrientation();
-    console.log("Orientation:", orientation);
-
-    // FIRST SCREEN
-    this.loadFile("launcher.ui.html");
+    // Call screen's onMount if exists
+    if (typeof screenObj.onMount === "function") screenObj.onMount();
   }
 };
 
-// ===============================
-// BOOT
-// ===============================
+// ------------------------------
+// INIT APP
+// ------------------------------
 document.addEventListener("DOMContentLoaded", () => {
-  App.start();
+  detectOrientation();
+  Renderer.init("approot");
+
+  // Load launcher screen first
+  Renderer.renderScreen(LauncherUI);
 });
+
+// ------------------------------
+// LISTEN FOR ORIENTATION CHANGES
+// ------------------------------
+window.addEventListener("resize", detectOrientation);
